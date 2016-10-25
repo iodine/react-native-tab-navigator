@@ -65,6 +65,7 @@ export default class TabNavigator extends React.Component {
   render() {
     let { style, children, tabBarStyle, tabBarShadowStyle, sceneStyle, ...props } = this.props;
     let scenes = [];
+    let selectedScene;
 
     React.Children.forEach(children, (item, index) => {
       if (item === null) {
@@ -81,8 +82,16 @@ export default class TabNavigator extends React.Component {
           {item}
         </SceneContainer>;
 
-      scenes.push(scene);
+      if (selected) {
+        selectedScene = scene;
+      } else {
+        scenes.push(scene);
+      }
     });
+
+    // make sure selectedScene is always on top (z-index) to 
+    // avoid visual glitches on early versions of android (<= 4.1)
+    scenes.push(selectedScene);
 
     return (
       <View {...props} style={[styles.container, style]}>
